@@ -6,8 +6,8 @@ FILM_COMMAND = Command("films")
 ADD_FILM_COMMAND = Command("add_film")
 
 COMMANDS = [
-    BotCommand(command="films", description="показати всі фільми")
-        ]
-COMMANDS = [
-            BotCommand(command="add_film", description="додати новий фільм")
-            ]
+    BotCommand(command="films", description="показати всі фільми"),
+    BotCommand(command="add_film", description="додати новий фільм")    
+]
+
+
