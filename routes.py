@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import  Message,CallbackQuery, URLInputFile,ReplyKeyboardRemove,
+from aiogram.types import  Message,CallbackQuery, URLInputFile,ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 
 from commands import FILM_COMMAND,ADD_FILM_COMMAND
@@ -54,7 +54,7 @@ async def add_film(message: Message, state: FSMContext):
 @films_router.message(FilmForm.name)
 async def get_film_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
-    await state.set_data(FilmForm.description)
+    await state.set_state(FilmForm.description)
     await message.answer(
         text="Введіть опис для фільму ",
         reply_markup=ReplyKeyboardRemove()
@@ -64,7 +64,7 @@ async def get_film_name(message: Message, state: FSMContext):
 @films_router.message(FilmForm.description)
 async def get_film_discription(message: Message, state: FSMContext):
     await state.update_data(description=message.text)
-    await state.set_data(FilmForm.rating)
+    await state.set_state(FilmForm.rating)
     await message.answer(
         text="Введіть рейтинг фільму у диапазоні від 0 до 10",
         reply_markup=ReplyKeyboardRemove()
@@ -72,7 +72,7 @@ async def get_film_discription(message: Message, state: FSMContext):
 
 @films_router.message(FilmForm.rating)
 async def get_film_rating(message: Message, state: FSMContext):
-    await state.update_data(rating=message.text)
+    await state.update_data(rating=float(message.text))
     await state.set_state(FilmForm.genre)
     await message.answer(
         text="Введіть жанр Фільму",
@@ -95,5 +95,16 @@ async def get_film_actors(message: Message, state: FSMContext):
     await state.set_state(FilmForm.poster)
     await message.answer(
         text="Вставте покликання на постер фільму",
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+
+@films_router.message(FilmForm.poster)
+async def get_film_poster(message: Message, state: FSMContext):
+    film_data = await state.update_data(poster=message.text)
+    data.add_film(film_data)
+    await state.clear()
+    await message.answer(
+        text=f"Фільми '{film_data["name"]}' успішно додано",
         reply_markup=ReplyKeyboardRemove()
     )
